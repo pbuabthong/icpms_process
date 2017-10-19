@@ -43,11 +43,43 @@ $ pip3 install -r requirements.txt
 python3 interp_icpms.py [-v] [-p] [-k K] [-h] element std_filename raw_filename analyzed_filename
 ```
 
-For help, use a conventional -h or --help
+element: the abbreviation of the chemical element to be modified. eg. Te, P, Cd
+std_filename: Excel filename containing the calibration concentration (normally 10 concentrations of 50% dilution each)
+raw_filename: Excel filename with ICP-MS raw readout in CPS
+analyzed_filename: Excel filename for the processed data from ICP-MS, but with linear interpolation
+
+-v: increase the level of verbosity
+-p: plot the fitting comparison at the end of the script
+-k K: specify the degree of smoothing spline in the fitting (default K = 1)
+
+For help, use -h or --help
 
 ```
 python3 interp_icpms.py -h
 ```
+
+## Examples
+
+Modify ICP-MS result for tellurium (Te) concentration using 1D smoothing spline
+```
+python3 interp_icpms.py Te Examples/std.xlsx Examples/raw.xlsx Examples/alz.xlsx
+```
+The terminal would display
+```
+Loading standard file: Examples/std.xlsx
+Loading raw file: Examples/std.xlsx
+Loading analyzed file: Examples/std.xlsx
+Converting...
+Converted successfully. Saved as Examples/alz_mod.xlsx
+```
+
+The result is now saved as the same filename as the analyzed data with "_mod" at the end.
+
+Additionally, an option -p can be added to display the comparison graph
+```
+python3 interp_icpms.py -p Te Examples/std.xlsx Examples/raw.xlsx Examples/alz.xlsx
+```
+![comparison graph](pics/plot.png)
 
 ## Authors
 
