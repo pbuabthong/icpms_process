@@ -40,7 +40,7 @@ $ pip3 install -r requirements.txt
 ## Usage
 
 ```
-python3 interp_icpms.py [-v] [-p] [-k K] [-h] element standard_filename raw_filename analyzed_filename
+python3 interp_icpms.py [-v] [-p] [-k K] [-h] element std_filename raw_filename analyzed_filename
 ```
 
 For help, use a conventional -h or --help
