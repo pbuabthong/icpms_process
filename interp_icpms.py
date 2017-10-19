@@ -68,7 +68,7 @@ def plotComparison(raw_list, std_list, lin_list, custom_fn):
     plt.xlabel('CPS')
     plt.ylabel('Concentration (ug/L)')
 
-    plt.title("different interpolation")
+    plt.title("Different interpolations")
 
     plt.legend(loc = 'upper left')
     plt.show()
@@ -152,6 +152,7 @@ def process(el, std_filename, raw_filename, alz_filename, v_value,
                 std_list.append(cell.value)
     std_list = std_list[::-1]
 
+    print("Loading raw file:", std_filename)
     raw = opx.load_workbook(raw_filename, data_only = True)
     raw_sheet = raw.get_sheet_by_name(raw.get_sheet_names()[0])
 
@@ -163,11 +164,13 @@ def process(el, std_filename, raw_filename, alz_filename, v_value,
 
     f1d = interpolate.InterpolatedUnivariateSpline(raw_list, std_list, k=k_value)
 
+    print("Loading analyzed file:", std_filename)
     alz = opx.load_workbook(alz_filename, data_only = True)
     alz_sheet = alz.get_sheet_by_name(alz.get_sheet_names()[0])
 
     samplename_column = findFirstCell(alz_sheet, 'Sample Name')[0]
 
+    print("Converting...")
     name_list = []
     lin_list = []
     for raw_element_col in raw_sheet.iter_cols():
