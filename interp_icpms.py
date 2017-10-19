@@ -200,6 +200,7 @@ def process(el, std_filename, raw_filename, alz_filename, v_value,
                 i += 1
     save_filename = os.path.splitext(alz_filename)[0] + "_mod.xlsx"
     alz.save(save_filename)
+    print("Converted successfully. Saved as", save_filename)
     if p_value :
         plotComparison(raw_list, std_list, lin_list, f1d)
 
