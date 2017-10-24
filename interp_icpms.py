@@ -152,7 +152,7 @@ def process(el, std_filename, raw_filename, alz_filename, v_value,
                 std_list.append(cell.value)
     std_list = std_list[::-1]
 
-    print("Loading raw file:", std_filename)
+    print("Loading raw file:", raw_filename)
     raw = opx.load_workbook(raw_filename, data_only = True)
     raw_sheet = raw.get_sheet_by_name(raw.get_sheet_names()[0])
 
@@ -164,15 +164,16 @@ def process(el, std_filename, raw_filename, alz_filename, v_value,
 
     f1d = interpolate.InterpolatedUnivariateSpline(raw_list, std_list, k=k_value)
 
-    print("Loading analyzed file:", std_filename)
+    print("Loading analyzed file:", alz_filename)
     alz = opx.load_workbook(alz_filename, data_only = True)
     alz_sheet = alz.get_sheet_by_name(alz.get_sheet_names()[0])
 
-    samplename_column = findFirstCell(alz_sheet, 'Sample Name')[0]
+    samplename_column = findFirstCell(alz_sheet, 'Sample Name')[1]
 
     print("Converting...")
     name_list = []
     lin_list = []
+    el_col = opx.utils.get_column_letter(findFirstCell(alz_sheet, el)[1])
     for raw_element_col in raw_sheet.iter_cols():
         if 'Sample Name' in str(raw_element_col[1].value):
             for cell in raw_element_col[2:]:
@@ -183,16 +184,15 @@ def process(el, std_filename, raw_filename, alz_filename, v_value,
             status = 'CPS'
             for cell in raw_element_col[2:]:
                 if 0 < i <=10:
-                    lin_list.append(alz_sheet[cell.coordinate].value)
+                    lin_list.append(alz_sheet[el_col + str(cell.row)].value)
                 if is_number(cell.value):
                     try:
-                        current_coord = cell.coordinate
                         value_new = float(f1d(cell.value))
-                        value_old = alz_sheet[current_coord].value
+                        value_old = alz_sheet[el_col + str(cell.row)].value
                         if v_value :
                             print("Converting", name_list[i], status,
                                     ": (", cell.value, " )", value_old, "-->", value_new)
-                        alz_sheet[current_coord].value = value_new
+                        alz_sheet[el_col + str(cell.row)].value = value_new
                     except:
                         print(name_list[i], ": cannot convert -- value: ", cell.value)
                 else:
